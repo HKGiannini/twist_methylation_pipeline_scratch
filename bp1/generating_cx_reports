@@ -1,0 +1,59 @@
+#!/bin/bash
+#SBATCH --mem=100GB # replace with your requirements
+#SBATCH -t 0-48 # replace with your requirements
+#SBATCH --cpus-per-task=8 # replace with your requirements
+#SBATCH --array=X-X # replace with your actual sample count
+
+set -euo pipefail
+
+# Bismark program citation: 10.1093/bioinformatics/btr167
+# Bismark manual: https://www.bioinformatics.babraham.ac.uk/projects/bismark/Bismark_User_Guide.pdf
+# Bismark GitHub: https://github.com/FelixKrueger/Bismark
+
+module load GCC/8.2.0
+module load Intel/2019.1.144
+module load Bowtie2/2.3.5.1
+module load GCC/11.3.0
+module load SAMtools/1.18
+module load Bismark/0.24.0
+
+sample_list=/path/to/sampleID_list.txt
+input_path=/path/to/trimmed/files
+genome_folder=/path/to/genome/folder/with/BisulfitePrepared/genome/
+output_path=/path/to/output/directory
+
+sampleID=$(sed -n "${SLURM_ARRAY_TASK_ID}p" "${sample_list}")
+echo "SampleID: ${sampleID}"
+
+# Map trimmed reads to the bisulfite-converted reference genome.
+# --score_min L,0,-0.6 sets the minimum alignment score threshold (see earlier explanation)
+# -R 12 increases re-seeding effort for reads with repetitive alignments
+# --parallel 8 must match --cpus-per-task above — Bismark's resource use scales
+# roughly linearly with this value (see Bismark docs), so keep these numbers in sync.
+bismark \
+    --genome_folder "${genome_folder}" \
+    -1 "${input_path}/${sampleID}_R1_trimmed_paired" \
+    -2 "${input_path}/${sampleID}_R2_trimmed_paired" \
+    -o "${output_path}/${sampleID}" \
+    --score_min L,0,-0.6 -R 12 \
+    --parallel 8
+echo "Done mapping ${sampleID} to reference genome"
+
+# Extract per-cytosine methylation calls from the aligned BAM.
+bismark_methylation_extractor \
+    -p -o "${output_path}/${sampleID}" \
+    --bedGraph --comprehensive --parallel 8 \
+    --genome_folder "${genome_folder}" \
+    "${output_path}/${sampleID}"/*.bam
+echo "Done with methylation extractor for ${sampleID}"
+
+# Merge CpG methylation calls (both strands) and calculate per-site coverage.
+coverage2cytosine \
+    --merge_CpG --genome_folder "${genome_folder}" \
+    -o "${output_path}/${sampleID}" \
+    "${output_path}/${sampleID}"/*.CX_report.txt
+echo "Done with coverage2cytosine for ${sampleID}"
+
+echo "Finished Bismark suite for ${sampleID}"
+
+# SUBMIT AS: sbatch bismark_suite.sh
