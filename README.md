@@ -3,7 +3,7 @@
 Code accompanying:
 
 > **A Standardized End-to-End Pipeline for Processing Twist Methylation Sequencing Data**
-> Giannini H, Longtin A, Cao E, Watowich MM, Pershad Y, Hodges E, Lea A, Bick AG.
+> Giannini H, Watowich MM, Cao W, Longtin A, Pershad Y, Hodges E, Lea A, Bick AG.
 > *Current Protocols* (in preparation)
 
 This repository contains the full computational pipeline described in the paper, from raw FASTQ files through cytosine reports, quality-controlled methylation matrices, cell-type deconvolution, epigenetic clock estimation, and methylation risk score (MRS) generation.
@@ -94,4 +94,5 @@ Steps must be run in order; each protocol's output is the next protocol's input.
 - 1 raw FASTQ file (2 paired files) are included in this repository. [Zenodo]
 - 8 CX reports are included in this repository. [Zenodo]
 - The Twist Methylome manifest (BED file) used for targeted panel filtering is available from [Twist Bioscience](https://www.twistbioscience.com/products/ngs/fixed-panels/human-methylome-panel?tab=resources#accordion-30b78b384b-item-dfa177bd30).
-- The Illumina manifest (csv) used for EPIC array filtering is available from [Illumina] (
+- The Illumina manifest (csv) used for EPIC array filtering is available from [Illumina] (https://support.illumina.com/downloads/infinium-methylationepic-v1-0-product-files.html)
+  
