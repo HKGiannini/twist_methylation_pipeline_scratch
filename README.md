@@ -94,5 +94,5 @@ Steps must be run in order; each protocol's output is the next protocol's input.
 - 1 raw FASTQ file (2 paired files) are included in this repository. [Zenodo]
 - 8 CX reports are included in this repository. [Zenodo]
 - The Twist Methylome manifest (BED file) used for targeted panel filtering is available from [Twist Bioscience](https://www.twistbioscience.com/products/ngs/fixed-panels/human-methylome-panel?tab=resources#accordion-30b78b384b-item-dfa177bd30).
-- The Illumina manifest (csv) used for EPIC array filtering is available from [Illumina] (https://support.illumina.com/downloads/infinium-methylationepic-v1-0-product-files.html)
+- The Illumina manifest (csv) used for EPIC array filtering is available from [Illumina](https://support.illumina.com/downloads/infinium-methylationepic-v1-0-product-files.html)
   
