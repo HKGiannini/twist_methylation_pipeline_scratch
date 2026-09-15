@@ -125,7 +125,6 @@ calculate_weighted_scores <- function(beta_mat,
   # Extract methylation values
     methylation <- beta_mat[
       available_probes,
-      ,
       drop = FALSE
     ]
 
