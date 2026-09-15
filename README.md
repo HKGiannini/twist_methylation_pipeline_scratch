@@ -65,7 +65,7 @@ Exact module versions used for this pipeline are listed in `environment/slurm_mo
 
 ### R environment (BP2–BP6)
 
-Install R (version X.X used here) and the following Bioconductor/CRAN packages:
+Install R (version 4.4.2 used here) and the following Bioconductor/CRAN packages:
 
 - Biostrings
 - BSseq
@@ -74,7 +74,7 @@ Install R (version X.X used here) and the following Bioconductor/CRAN packages:
 - EpiDISH
 - methylCIPHER
 
-A full package list with versions is in `environment/environment.yml`. If using Terra, these scripts were originally run in [Terra workspace name / Docker image — fill in].
+A full package list with versions is in `environment/session_info.txt`. 
 
 ## Running the pipeline
 
