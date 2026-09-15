@@ -84,9 +84,7 @@ Steps must be run in order; each protocol's output is the next protocol's input.
 2. **BP1:** `sbatch bp1_fastq_to_cx_report/01_trimming.sh` — trims adapters from raw FASTQ files.
 3. **BP1:** `sbatch bp1_fastq_to_cx_report/02_bismark_suite.sh` — aligns trimmed reads and generates per-sample CX reports.
 4. **BP2:** Run `bp2_bsseq_generation/bsseq.R` in R — reads CX reports and produces a filtered `BSseq` object.
-5. **BP3:** Run `bp3_qc_and_matrices/qc_matrices.R` in R — performs CpG-level QC and writes methylation-level and coverage matrices.
-       - Illumina matrices: Provide cgXXXXXXX annotations. Use with BP4, BP5, and BP6.
-       - Twist matrices: Provide chr:pos annotations. Not used in any of our BPs; however, is useful for analysis.
+5. **BP3:** Run `bp3_qc_and_matrices/qc_matrices.R` in R — performs CpG-level QC and writes methylation-level and coverage matrices. (Illumina matrices provide cgXXXXXXX annotations, which are used with BP4, BP5, and BP6. Twist matrices provide chr:pos annotations. Not used in any of our BPs; however, is useful for downstream analysis.)
 7. **BP4:** Run `bp4_cell_deconvolution/deconvolution.R` in R — estimates cell-type proportions with EpiDISH.
 8. **BP5:** Run `bp5_epigenetic_clocks/epigenetic_clocks.R` in R — estimates epigenetic age with methylCIPHER.
 9. **BP6:** Run `bp6_methylation_risk_scores/mrs_scoring.R` in R — generates methylation risk scores for exposures/diseases.
