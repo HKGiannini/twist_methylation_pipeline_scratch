@@ -15,7 +15,7 @@ module load Intel/2019.1.144
 module load Bowtie2/2.3.5.1
 module load GCC/11.3.0
 module load SAMtools/1.18
-module load Bismark/0.24.0
+module load Bismark/0.25.1
 
 sample_list=/path/to/sampleID_list.txt
 input_path=/path/to/trimmed/files
