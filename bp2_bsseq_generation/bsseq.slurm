@@ -10,7 +10,7 @@ set -euo pipefail
 
 module load GCC/10.2.0
 module load OpenMPI/4.0.5
-module load R/4.0.5
+module load R/4.4.2
 
 Rscript bsseq.R
 
