@@ -59,8 +59,8 @@ manifest <- manifest %>%
   mutate(CHR_hg38 = ifelse(startsWith(CHR_hg38, "chr"), CHR_hg38, paste0("chr", CHR_hg38)),
          Start_hg38 = as.numeric(Start_hg38) + 1)
 
-# Map chr:pos to Illumina CpG IDs (cgXXXXXXXX) for both beta and coverage matrix
-filtered_beta_imputed_cpgid <- methylation_df_imputed %>%
+# Map chr:pos to Illumina CpG IDs (cgXXXXXXXX) for both methylation and coverage matrix
+filtered_met_imputed_cpgid <- methylation_df_imputed %>%
   inner_join(manifest %>% select(IlmnID, CHR_hg38, Start_hg38),
              by = c("chromosome" = "CHR_hg38", "position" = "Start_hg38")) %>%
   relocate(IlmnID)
@@ -70,7 +70,7 @@ filtered_coverage_cpgid <- coverage_df %>%
              by = c("chromosome" = "CHR_hg38", "position" = "Start_hg38")) %>%
   relocate(IlmnID)
 
-# Save the beta and coverage matrices as both the Twist (chr:pos) and Illumina (cpgXXXXXXXX) formats. Will give you 4 different files. 
+# Save the met and coverage matrices as both the Twist (chr:pos) and Illumina (cpgXXXXXXXX) formats. Will give you 4 different files. 
 coverage_df_out <- coverage_df %>%
   mutate(`chr:pos` = paste0(chromosome, ":", position)) %>%
   select(`chr:pos`, everything(), -chromosome, -position)
@@ -82,7 +82,7 @@ methylation_df_imputed_out <- methylation_df_imputed %>%
 filtered_coverage_cpgid_out <- filtered_coverage_cpgid %>%
   select(-chromosome, -position)
 
-filtered_beta_imputed_cpgid_out <- filtered_beta_imputed_cpgid %>%
+filtered_met_imputed_cpgid_out <- filtered_met_imputed_cpgid %>%
   select(-chromosome, -position)
 
 # Coverage, Twist chr:pos
@@ -93,10 +93,10 @@ saveRDS(coverage_df_out, "path/to/twist/ref/coverage.rds")
 write.table(filtered_coverage_cpgid_out, "path/to/Illumina/ref/coverage.tsv", sep = "\t", row.names = FALSE, quote = FALSE)
 saveRDS(filtered_coverage_cpgid_out, "path/to/Illumina/ref/coverage.rds")
 
-# Imputed betas, Twist chr:pos
-write.table(methylation_df_imputed_out, "path/to/twist/ref/beta.tsv", sep = "\t", row.names = FALSE, quote = FALSE)
-saveRDS(methylation_df_imputed_out, "path/to/twist/ref/beta.rds")
+# Imputed mets, Twist chr:pos
+write.table(methylation_df_imputed_out, "path/to/twist/ref/met.tsv", sep = "\t", row.names = FALSE, quote = FALSE)
+saveRDS(methylation_df_imputed_out, "path/to/twist/ref/met.rds")
 
-# Imputed betas, CpG ID only
-write.table(filtered_beta_imputed_cpgid_out, "path/to/Illumina/ref/beta.tsv", sep = "\t", row.names = FALSE, quote = FALSE)
-saveRDS(filtered_beta_imputed_cpgid_out, "path/to/Illumina/ref/beta.rds")
+# Imputed mets, CpG ID only
+write.table(filtered_met_imputed_cpgid_out, "path/to/Illumina/ref/met.tsv", sep = "\t", row.names = FALSE, quote = FALSE)
+saveRDS(filtered_met_imputed_cpgid_out, "path/to/Illumina/ref/met.rds")
