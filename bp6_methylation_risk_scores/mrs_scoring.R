@@ -1,5 +1,5 @@
-# Read in beta matrix, coverage matrix, cell fractions, and chronologic age. 
-beta_mat <- as.matrix(read.table("/path/to/Illumina/ref/beta.tsv", sep = "\t", header = TRUE, row.names = 1))
+# Read in met matrix, coverage matrix, cell fractions, and chronologic age. 
+met_mat <- as.matrix(read.table("/path/to/Illumina/ref/met.tsv", sep = "\t", header = TRUE, row.names = 1))
 coverage_mat <- read.table("/path/to/Illumina/ref/coverage.tsv", sep = "\t", header = TRUE, row.names = 1)
 cell_fractions <- read.table("/path/to/cell/fractions.tsv", sep = "\t", header = TRUE, row.names = 1)
 chrono_age <- readRDS("/path/to/chronologic/age.rds")
@@ -23,12 +23,12 @@ m_to_beta <- function(x) {
   2^x / (1 + 2^x)
 }
 
-# Regress out the given covariates (e.g. age, cell fractions) from each CpG's methylation values, returning covariate-adjusted beta values.
-adjust_methylation <- function(beta_mat, covariates) {
+# Regress out the given covariates (e.g. age, cell fractions) from each CpG's methylation values, returning covariate-adjusted met values.
+adjust_methylation <- function(met_mat, covariates) {
   stopifnot(
-    identical(colnames(beta_mat), rownames(covariates))
+    identical(colnames(met_mat), rownames(covariates))
   )
-  m_mat <- beta_to_m(beta_mat)
+  m_mat <- beta_to_m(met_mat)
 
   adjusted <- t(
     apply(m_mat, 1, function(y) {
@@ -50,7 +50,7 @@ adjust_methylation <- function(beta_mat, covariates) {
     })
   )
 
-  dimnames(adjusted) <- dimnames(beta_mat)
+  dimnames(adjusted) <- dimnames(met_mat)
   m_to_beta(adjusted)
 }
 
@@ -68,7 +68,7 @@ score_qc_function <- function(observed,
 }
 
 # Calculate weighted score 
-calculate_weighted_scores <- function(beta_mat,
+calculate_weighted_scores <- function(met_mat,
                                       score_weights,
                                       score_defs,
                                       min_prop_large,
@@ -76,7 +76,7 @@ calculate_weighted_scores <- function(beta_mat,
                                       coverage_mat = NULL,
                                       qc_function = NULL) {
   results <- data.table(
-    sample = colnames(beta_mat)
+    sample = colnames(met_mat)
   )
 
   qc_records <- list()
@@ -96,7 +96,7 @@ calculate_weighted_scores <- function(beta_mat,
 
     available_probes <- intersect(
       weights$probe,
-      rownames(beta_mat)
+      rownames(met_mat)
     )
 
     score_name <- paste(
@@ -110,7 +110,7 @@ calculate_weighted_scores <- function(beta_mat,
       results[, (score_name) := NA_real_]
 
       qc_records[[score_name]] <- data.table(
-        sample = colnames(beta_mat),
+        sample = colnames(met_mat),
         trait = current_trait,
         definition = current_definition,
         n_expected = nrow(weights),
@@ -123,7 +123,7 @@ calculate_weighted_scores <- function(beta_mat,
     }
 
   # Extract methylation values
-    methylation <- beta_mat[
+    methylation <- met_mat[
       available_probes,
       drop = FALSE
     ]
@@ -174,7 +174,7 @@ calculate_weighted_scores <- function(beta_mat,
 
 # Record QC
     qc_records[[score_name]] <- data.table(
-      sample = colnames(beta_mat),
+      sample = colnames(met_mat),
       trait = current_trait,
       definition = current_definition,
       n_expected = expected_probes,
@@ -195,11 +195,11 @@ calculate_weighted_scores <- function(beta_mat,
 
 # Scoring
 score_probes <- intersect(
-  rownames(beta_mat),
+  rownames(met_mat),
   unique(score_weights$probe)
 )
 
-score_beta <- beta_mat[
+score_met <- met_mat[
   score_probes,
   ,
   drop = FALSE
@@ -215,16 +215,16 @@ score_coverage <- if (is.null(coverage_mat)) {
   ]
 }
 
-# Ensure age covariate order matches beta matrix order
+# Ensure age covariate order matches met matrix order
 age_covariates <- data.frame(
-  Chrono_age = chrono_age[colnames(beta_mat)],
-  row.names = colnames(beta_mat)
+  Chrono_age = chrono_age[colnames(met_mat)],
+  row.names = colnames(met_mat)
 )
 head(age_covariates)
 
-# Remove one cell-fraction column because estimated fractions sum to 1. Reorder cell_fractions to match beta_mat's sample order by name first.
+# Remove one cell-fraction column because estimated fractions sum to 1. Reorder cell_fractions to match met_mat's sample order by name first.
 cell_covariates <- cell_fractions[
-  colnames(beta_mat),
+  colnames(met_mat),
   -ncol(cell_fractions),
   drop = FALSE
 ]
@@ -235,15 +235,15 @@ age_cell_covariates <- cbind(
 )
 
 # Generate three methylation matrices
-beta_unadjusted <- score_beta
+met_unadjusted <- score_met
 
-beta_age_adjusted <- adjust_methylation(
-  score_beta,
+met_age_adjusted <- adjust_methylation(
+  score_met,
   age_covariates
 )
 
-beta_age_cell_adjusted <- adjust_methylation(
-  score_beta,
+met_age_cell_adjusted <- adjust_methylation(
+  score_met,
   age_cell_covariates
 )
 
@@ -252,7 +252,7 @@ min_prop_large <- 0.2       # require ≥80% of expected CpGs for larger scores
 require_all_if_n_le <- 5    # scores with ≤5 CpGs must have all of them observed
 
 raw_scores <- calculate_weighted_scores(
-  beta_mat = beta_unadjusted,
+  met_mat = met_unadjusted,
   coverage_mat = score_coverage,
   score_weights = score_weights,
   score_defs = score_defs,
@@ -263,7 +263,7 @@ raw_scores <- calculate_weighted_scores(
  
  
 age_adjusted_scores <- calculate_weighted_scores(
-  beta_mat = beta_age_adjusted,
+  met_mat = met_age_adjusted,
   coverage_mat = score_coverage,
   score_weights = score_weights,
   score_defs = score_defs,
@@ -274,7 +274,7 @@ age_adjusted_scores <- calculate_weighted_scores(
  
  
 age_cell_adjusted_scores <- calculate_weighted_scores(
-  beta_mat = beta_age_cell_adjusted,
+  met_mat = met_age_cell_adjusted,
   coverage_mat = score_coverage,
   score_weights = score_weights,
   score_defs = score_defs,
@@ -295,7 +295,7 @@ final_scores <- Reduce(
   },
   list(
     data.table(
-      sample = colnames(beta_mat)
+      sample = colnames(met_mat)
     ),
     data.table(
       sample = names(chrono_age),
