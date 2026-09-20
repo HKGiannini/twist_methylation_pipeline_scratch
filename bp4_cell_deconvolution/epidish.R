@@ -11,12 +11,12 @@ library(EpiDISH)
 library(data.table)
 
 # Read in the methylation matrix (CpG ID row names if using the Illumina/EPIC reference; chr:pos if using the Twist reference — see BP3).
-beta_df <- read.table("/path/to/Illumina/ref/beta.tsv", sep = "\t",
+met_df <- read.table("/path/to/Illumina/ref/met.tsv", sep = "\t",
                        header = TRUE, row.names = 1)
-beta_matrix <- as.matrix(beta_df)
+met_matrix <- as.matrix(met_df)
 
 # Estimate cell type proportions via robust partial correlation (RPC).
-BloodFrac.m_output <- epidish(beta.m = beta_matrix,
+BloodFrac.m_output <- epidish(met.m = met_matrix,
                                ref.m = X,
                                method = "RPC")$estF
 
