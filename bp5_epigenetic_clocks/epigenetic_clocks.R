@@ -24,12 +24,12 @@ download.file(
   mode = "wb"
 )
 
-# Read in the beta file Illumina Cpg annotated (see BP3) since PCClocks was built using the EPIC array. 
-imputed_beta_cpg <- read.table("/path/to/Illumina/ref/beta.tsv", sep = "\t",
+# Read in the met file Illumina Cpg annotated (see BP3) since PCClocks was built using the EPIC array. 
+imputed_met_cpg <- read.table("/path/to/Illumina/ref/met.tsv", sep = "\t",
                                 header = TRUE, row.names = 1)
 
-# calcPCClocks() expects samples as rows, CpGs as columns. You will need to transpose the beta file.
-transposed <- t(imputed_beta_cpg)
+# calcPCClocks() expects samples as rows, CpGs as columns. You will need to transpose the met file.
+transposed <- t(imputed_met_cpg)
 
 # Read in phenotype file. It must be in the format: Sample_ID, Female (1 = Female, 0 = Male), Age. You need this info because some PC clocks (e.g. PCGrimAge) use chronological age and/or sex as model inputs, not just methylation values.
 pheno <- read.table("/path/to/pheno.tsv", sep = "\t", header = TRUE)
