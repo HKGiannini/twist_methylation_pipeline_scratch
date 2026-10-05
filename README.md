@@ -29,8 +29,8 @@ BP1 is designed to run on a SLURM-managed HPC cluster. BP2–BP6 are R scripts t
 methylome-pipeline/
 ├── README.md
 ├── environment/
-│   ├── environment.yml        # or renv.lock — R package versions
-│   └── slurm_modules.txt      # exact module versions loaded in #SBATCH scripts
+│   ├── environment.yml        
+│   └── slurm_modules.txt      
 ├── bp1_fastq_to_cx_report/
 │   ├── 00_genome_preparation.sh
 │   ├── 01_trimming.sh
@@ -47,7 +47,7 @@ methylome-pipeline/
 │   └── mrs_scoring.R
 ├── config/
 │   └── sample_manifest.tsv    # sample IDs, FASTQ paths, batch info
-└── results/                   # pipeline outputs (gitignored if large)
+└── results/                   
 ```
 
 ## Setup
