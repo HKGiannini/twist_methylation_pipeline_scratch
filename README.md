@@ -12,6 +12,10 @@ This repository contains the full computational pipeline described in the paper,
 
 The pipeline mirrors the six Basic Protocols (BP1–BP6) in the paper. Each protocol has its own folder so a given section of the paper maps directly to a given folder/script.
 
+<p align="center">
+<img width="760" height="851" alt="image" src="https://github.com/user-attachments/assets/9ee67908-f1b5-44c3-b460-86d38da1b51c" />
+</p>
+
 | Protocol | What it does | Folder | Environment |
 |---|---|---|---|
 | BP1 | FASTQ → adapter trimming → Bismark alignment → cytosine (CX) reports | `bp1_fastq_to_cx_report/` | Bash + SLURM |
