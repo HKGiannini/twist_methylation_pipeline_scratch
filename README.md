@@ -91,8 +91,10 @@ Steps must be run in order; each protocol's output is the next protocol's input.
 
 ## Data Included
 
-- 1 raw FASTQ file (2 paired files) are included in this repository [use in BP1]. [Zenodo]
-- 8 CX reports along with meta data are included in this repository [use in BP2-BP6]. [Zenodo]
+- 1 raw FASTQ file (2 paired files) are included in this repository [use in BP1]. (https://doi.org/10.5281/zenodo.23286070)<img width="468" height="23" alt="image" src="https://github.com/user-attachments/assets/56978381-38bf-424e-852b-efcb3c3cb140" />
+]
+- 8 CX reports along with meta data are included in this repository [use in BP2-BP6]. https://doi.org/10.5281/zenodo.23286070<img width="468" height="23" alt="image" src="https://github.com/user-attachments/assets/ecbe540d-e16f-40c0-8d12-0b958701d199" />
+
 - The Twist Methylome manifest (BED file) used for targeted panel filtering is available from [Twist Bioscience](https://www.twistbioscience.com/products/ngs/fixed-panels/human-methylome-panel?tab=resources#accordion-30b78b384b-item-dfa177bd30).
 - The Illumina manifest (csv) used for EPIC array filtering is available from [Illumina](https://support.illumina.com/downloads/infinium-methylationepic-v1-0-product-files.html)
 - Sample methylation risk score matrix for the trait BMI.
